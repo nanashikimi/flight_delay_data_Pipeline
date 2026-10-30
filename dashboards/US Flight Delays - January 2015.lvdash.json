@@ -1,0 +1,1411 @@
+{
+  "datasets": [
+    {
+      "name": "5e6830a1",
+      "displayName": "gold_flight_kpis",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.flight_delay.gold_flight_kpis",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "8987dbca",
+      "displayName": "gold_daily_kpis",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.flight_delay.gold_daily_kpis",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ba9f88f6",
+      "displayName": "Sankey Dataset",
+      "queryLines": [
+        "SELECT AIRLINE_NAME,\r\n",
+        "    CASE\r\n",
+        "        WHEN IS_DELAYED = 1 THEN 'Delayed'\r\n",
+        "        WHEN IS_DELAYED = 0 THEN 'Not Delayed'\r\n",
+        "        ELSE 'Unknown'\r\n",
+        "    END AS DELAY_STATUS,\r\n",
+        "    COUNT(*) AS FLIGHT_COUNT\r\n",
+        "    FROM flight_delay.gold_flights\r\n",
+        "    GROUP BY AIRLINE_NAME, DELAY_STATUS\r\n",
+        "ORDER BY FLIGHT_COUNT DESC;"
+      ],
+      "catalog": "workspace",
+      "schema": "default"
+    },
+    {
+      "name": "b2d321c7",
+      "displayName": "gold_airline_kpis",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.flight_delay.gold_airline_kpis",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "5875fa48",
+      "displayName": "gold_airport_kpis",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.flight_delay.gold_airport_kpis",
+        "dimensions": [
+          {
+            "expr": "source.*"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "bf33c9d4",
+      "displayName": "Flight Overview",
+      "layout": [
+        {
+          "widget": {
+            "name": "total-flights-amount",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5e6830a1",
+                  "fields": [
+                    {
+                      "name": "sum(TOTAL_FLIGHTS)",
+                      "expression": "SUM(`TOTAL_FLIGHTS`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block\"><span style=\"font-size:18px\">Total Flights</span></span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(TOTAL_FLIGHTS)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "style": {
+                    "fontColor": {
+                      "themeColorType": "visualizationColors",
+                      "position": 3
+                    },
+                    "rules": [
+                      {
+                        "condition": {
+                          "operator": ">="
+                        },
+                        "color": "#00A972"
+                      }
+                    ]
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 2,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "delayed-flights",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5e6830a1",
+                  "fields": [
+                    {
+                      "name": "sum(DELAYED_FLIGHTS)",
+                      "expression": "SUM(`DELAYED_FLIGHTS`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 18px;\">Delayed Flights</span></span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(DELAYED_FLIGHTS)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "cancelled-flights",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5e6830a1",
+                  "fields": [
+                    {
+                      "name": "sum(CANCELLED_FLIGHTS)",
+                      "expression": "SUM(`CANCELLED_FLIGHTS`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 18px;\">Cancelled Flights</span></span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(CANCELLED_FLIGHTS)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 0,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "diverted-flights",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5e6830a1",
+                  "fields": [
+                    {
+                      "name": "sum(DIVERTED_FLIGHTS)",
+                      "expression": "SUM(`DIVERTED_FLIGHTS`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 18px;\">Diverted Flights</span></span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(DIVERTED_FLIGHTS)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "delay-rate",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5e6830a1",
+                  "fields": [
+                    {
+                      "name": "sum(DELAY_RATE)",
+                      "expression": "SUM(`DELAY_RATE`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 18px;\">Delay Rate</span></span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(DELAY_RATE)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "style": {
+                    "fontColor": {
+                      "themeColorType": "visualizationColors",
+                      "position": 4
+                    },
+                    "rules": [
+                      {
+                        "condition": {
+                          "operand": {
+                            "type": "data-value",
+                            "value": "20"
+                          },
+                          "operator": "<"
+                        },
+                        "fontColor": {
+                          "themeColorType": "visualizationColors",
+                          "position": 3
+                        }
+                      },
+                      {
+                        "condition": {
+                          "operand": {
+                            "type": "data-value",
+                            "value": "40"
+                          },
+                          "operator": "<"
+                        },
+                        "fontColor": {
+                          "themeColorType": "visualizationColors",
+                          "position": 2
+                        }
+                      }
+                    ]
+                  },
+                  "formatTemplate": "{{ @formatted }}%"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 2,
+            "width": 4,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "daily-delay-rate",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "8987dbca",
+                  "fields": [
+                    {
+                      "name": "daily(FLIGHT_DATE)",
+                      "expression": "DATE_TRUNC(\"DAY\", `FLIGHT_DATE`)"
+                    },
+                    {
+                      "name": "DELAY_RATE",
+                      "expression": "`DELAY_RATE`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 18px;\">Daily Delay Rate</span></span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "daily(FLIGHT_DATE)",
+                  "displayName": "Flight Date",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "DELAY_RATE",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "formatTemplate": "{{ @formatted }}%",
+                  "displayName": "Delay Rate (%)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 4,
+            "width": 12,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "be6b5a40",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "8987dbca",
+                  "fields": [
+                    {
+                      "name": "daily(FLIGHT_DATE)",
+                      "expression": "DATE_TRUNC(\"DAY\", `FLIGHT_DATE`)"
+                    },
+                    {
+                      "name": "DELAYED_FLIGHTS",
+                      "expression": "`DELAYED_FLIGHTS`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "daily(FLIGHT_DATE)",
+                  "axis": {
+                    "title": "Flight Date"
+                  },
+                  "displayName": "Flight Date",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "DELAYED_FLIGHTS",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "displayName": "Delayed Flights",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 9,
+            "width": 6,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "9b55c18b",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "8987dbca",
+                  "fields": [
+                    {
+                      "name": "daily(FLIGHT_DATE)",
+                      "expression": "DATE_TRUNC(\"DAY\", `FLIGHT_DATE`)"
+                    },
+                    {
+                      "name": "CANCELLED_FLIGHTS",
+                      "expression": "`CANCELLED_FLIGHTS`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "daily(FLIGHT_DATE)",
+                  "displayName": "Flight Date",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "CANCELLED_FLIGHTS",
+                  "displayName": "Cancelled Flights",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 6,
+            "height": 5
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "f1342090",
+      "displayName": "Airlines Performance",
+      "layout": [
+        {
+          "widget": {
+            "name": "delay-rate-by-airline",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "b2d321c7",
+                  "fields": [
+                    {
+                      "name": "DELAY_RATE",
+                      "expression": "`DELAY_RATE`"
+                    },
+                    {
+                      "name": "AIRLINE_NAME",
+                      "expression": "`AIRLINE_NAME`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 18px;\">Delay Rate by Airline</span></span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "DELAY_RATE",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "axis": {
+                    "title": "Delay Rate"
+                  },
+                  "scale": {
+                    "type": "quantitative",
+                    "reverse": false
+                  }
+                },
+                "y": {
+                  "fieldName": "AIRLINE_NAME",
+                  "axis": {
+                    "title": " "
+                  },
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x-reversed"
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "delayed-flights-by-airline",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "b2d321c7",
+                  "fields": [
+                    {
+                      "name": "DELAYED_FLIGHTS",
+                      "expression": "`DELAYED_FLIGHTS`"
+                    },
+                    {
+                      "name": "AIRLINE_NAME",
+                      "expression": "`AIRLINE_NAME`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 18px;\">Delayed Flights by Airline</span></span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "DELAYED_FLIGHTS",
+                  "axis": {
+                    "title": "Delayed Flights"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "AIRLINE_NAME",
+                  "axis": {
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x-reversed"
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "5b85b0a5",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ba9f88f6",
+                  "fields": [
+                    {
+                      "name": "AIRLINE_NAME",
+                      "expression": "`AIRLINE_NAME`"
+                    },
+                    {
+                      "name": "DELAY_STATUS",
+                      "expression": "`DELAY_STATUS`"
+                    },
+                    {
+                      "name": "sum(FLIGHT_COUNT)",
+                      "expression": "SUM(`FLIGHT_COUNT`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 1,
+              "widgetType": "sankey",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(FLIGHT_COUNT)"
+                },
+                "stages": [
+                  {
+                    "fieldName": "AIRLINE_NAME"
+                  },
+                  {
+                    "fieldName": "DELAY_STATUS"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 5,
+            "width": 6,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "e00003f3",
+      "displayName": "Airports Performance",
+      "layout": [
+        {
+          "widget": {
+            "name": "delay-rate-by-airport",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5875fa48",
+                  "fields": [
+                    {
+                      "name": "DELAY_RATE",
+                      "expression": "`DELAY_RATE`"
+                    },
+                    {
+                      "name": "ORIGIN_AIRPORT",
+                      "expression": "`ORIGIN_AIRPORT`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 18px;\">Delay Rate by Airport</span></span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "DELAY_RATE",
+                  "axis": {
+                    "title": "Delay Rate"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "ORIGIN_AIRPORT",
+                  "axis": {
+                    "title": " "
+                  },
+                  "scale": {
+                    "type": "categorical",
+                    "categorySize": {
+                      "type": "number-of-categories",
+                      "number": 15
+                    },
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "ALO",
+                        "ILG",
+                        "UST",
+                        "GUM",
+                        "ORD",
+                        "ROW",
+                        "HDN",
+                        "ASE",
+                        "STC",
+                        "MKG",
+                        "AZO",
+                        "LAW",
+                        "APN",
+                        "DEN",
+                        "CMX",
+                        "PBG",
+                        "TVC",
+                        "MDW",
+                        "MQT",
+                        "JMS",
+                        "CID",
+                        "BPT",
+                        "GGG",
+                        "SCE",
+                        "BMI",
+                        "PUB",
+                        "JLN",
+                        "DBQ",
+                        "SUX",
+                        "TOL",
+                        "DFW",
+                        "SBN",
+                        "MLI",
+                        "FWA",
+                        "TTN",
+                        "ACT",
+                        "BIS",
+                        "PIA",
+                        "FSD",
+                        "CMI",
+                        "GRK",
+                        "EVV",
+                        "TXK",
+                        "CEC",
+                        "SAF",
+                        "DSM",
+                        "GRR",
+                        "JAC",
+                        "DVL",
+                        "RST",
+                        "GUC",
+                        "RAP",
+                        "EGE",
+                        "SGF",
+                        "CWA",
+                        "IAD",
+                        "CSG",
+                        "BWI",
+                        "MAF",
+                        "SPS",
+                        "HOU",
+                        "ICT",
+                        "LEX",
+                        "EWR",
+                        "LGA",
+                        "COU",
+                        "CHO",
+                        "CRW",
+                        "BQN",
+                        "STL",
+                        "MHK",
+                        "DAL",
+                        "SJU",
+                        "ABQ",
+                        "COS",
+                        "BOI",
+                        "ABI",
+                        "TYR",
+                        "ERI",
+                        "CMH",
+                        "FAR",
+                        "MEI",
+                        "CLL",
+                        "DHN",
+                        "ISP",
+                        "IAH",
+                        "MIA",
+                        "TYS",
+                        "AVP",
+                        "STT",
+                        "MBS",
+                        "XNA",
+                        "MSN",
+                        "GRI",
+                        "MLU",
+                        "LIT",
+                        "BUF",
+                        "HYS",
+                        "ATW",
+                        "SRQ",
+                        "SJT",
+                        "LBB",
+                        "RDD",
+                        "GCK",
+                        "BNA",
+                        "SHV",
+                        "LAS",
+                        "MKE",
+                        "DTW",
+                        "LSE",
+                        "MCO",
+                        "AMA",
+                        "MOT",
+                        "JFK",
+                        "BZN",
+                        "RSW",
+                        "OTH",
+                        "IMT",
+                        "LFT",
+                        "ISN",
+                        "SYR",
+                        "GSP",
+                        "DLH",
+                        "MYR",
+                        "MOB",
+                        "IND",
+                        "ROC",
+                        "SAT",
+                        "BTR",
+                        "ACV",
+                        "MCI",
+                        "TPA",
+                        "PHL",
+                        "OMA",
+                        "PNS",
+                        "FLL",
+                        "FNT",
+                        "ELP",
+                        "DRO",
+                        "RDM",
+                        "SDF",
+                        "GRB",
+                        "MSP",
+                        "PLN",
+                        "DAY",
+                        "BHM",
+                        "JAN",
+                        "STX",
+                        "SUN",
+                        "PBI",
+                        "AUS",
+                        "SWF",
+                        "COD",
+                        "ORH",
+                        "MGM",
+                        "SAV",
+                        "FAT",
+                        "GSO",
+                        "LBE",
+                        "HSV",
+                        "OAK",
+                        "FSM",
+                        "ATL",
+                        "LAN",
+                        "LNK",
+                        "DIK",
+                        "HPN",
+                        "LAX",
+                        "TUL",
+                        "ONT",
+                        "CAE",
+                        "PHX",
+                        "EUG",
+                        "BTV",
+                        "MFE",
+                        "SJC",
+                        "ALB",
+                        "CVG",
+                        "ESC",
+                        "AEX",
+                        "SPI",
+                        "RHI",
+                        "GFK",
+                        "PIT",
+                        "OKC",
+                        "JNU",
+                        "VPS",
+                        "PSP",
+                        "MSY",
+                        "LAR",
+                        "BDL",
+                        "ELM",
+                        "CRP",
+                        "SFO",
+                        "SEA",
+                        "JAX",
+                        "PIB",
+                        "MEM",
+                        "GNV",
+                        "MSO",
+                        "IDA",
+                        "PWM",
+                        "MMH",
+                        "SAN",
+                        "SMF",
+                        "DCA",
+                        "CHS",
+                        "CLE",
+                        "AGS",
+                        "CLT",
+                        "RDU",
+                        "ECP",
+                        "AVL",
+                        "BRO",
+                        "SLC",
+                        "RIC",
+                        "MFR",
+                        "CAK",
+                        "GTF",
+                        "CIU",
+                        "GEG",
+                        "BOS",
+                        "HIB",
+                        "BQK",
+                        "ORF",
+                        "OGG",
+                        "PPG",
+                        "ROA",
+                        "EAU",
+                        "ABR",
+                        "ABY",
+                        "WRG",
+                        "MTJ",
+                        "GJT",
+                        "SBP",
+                        "RKS",
+                        "FAY",
+                        "SBA",
+                        "FCA",
+                        "PSG",
+                        "BFL",
+                        "LCH",
+                        "MHT",
+                        "PDX",
+                        "TLH",
+                        "TUS",
+                        "CHA",
+                        "SNA",
+                        "BUR",
+                        "PHF",
+                        "ADQ",
+                        "PAH",
+                        "RNO",
+                        "MDT",
+                        "PVD",
+                        "CPR",
+                        "GPT",
+                        "YAK",
+                        "ILM",
+                        "PSC",
+                        "KTN",
+                        "LGB",
+                        "CDV",
+                        "SMX",
+                        "GCC",
+                        "ABE",
+                        "FLG",
+                        "MLB",
+                        "BIL",
+                        "SIT",
+                        "LIH",
+                        "OAJ",
+                        "GTR",
+                        "TRI",
+                        "KOA",
+                        "HRL",
+                        "ITO",
+                        "ACY",
+                        "MRY",
+                        "HNL",
+                        "EWN",
+                        "INL",
+                        "CDC",
+                        "LRD",
+                        "SGU",
+                        "HLN",
+                        "PIH",
+                        "YUM",
+                        "EYW",
+                        "PSE",
+                        "ANC",
+                        "DAB",
+                        "TWF",
+                        "BET",
+                        "VEL",
+                        "VLD",
+                        "CLD",
+                        "OME",
+                        "BJI",
+                        "BLI",
+                        "SCC",
+                        "BRW",
+                        "BRD",
+                        "BTM",
+                        "OTZ",
+                        "FAI",
+                        "HOB",
+                        "CNY",
+                        "ADK",
+                        "EKO",
+                        "IAG",
+                        "LWS"
+                      ]
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "busiest-departure-airports",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5875fa48",
+                  "fields": [
+                    {
+                      "name": "sum(TOTAL_FLIGHTS)",
+                      "expression": "SUM(`TOTAL_FLIGHTS`)"
+                    },
+                    {
+                      "name": "ORIGIN_AIRPORT",
+                      "expression": "`ORIGIN_AIRPORT`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 18px;\">Busiest Departure Airports</span></span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(TOTAL_FLIGHTS)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "ORIGIN_AIRPORT",
+                  "scale": {
+                    "type": "categorical",
+                    "categorySize": {
+                      "type": "number-of-categories",
+                      "number": 15
+                    },
+                    "sort": {
+                      "by": "x-reversed"
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "1f982ec5",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5875fa48",
+                  "fields": [
+                    {
+                      "name": "ORIGIN_CITY_TOWN",
+                      "expression": "`ORIGIN_CITY_TOWN`"
+                    },
+                    {
+                      "name": "ORIGIN_AIRPORT",
+                      "expression": "`ORIGIN_AIRPORT`"
+                    },
+                    {
+                      "name": "TOTAL_FLIGHTS",
+                      "expression": "`TOTAL_FLIGHTS`"
+                    },
+                    {
+                      "name": "DELAY_RATE",
+                      "expression": "`DELAY_RATE`"
+                    },
+                    {
+                      "name": "DIVERTED_FLIGHTS",
+                      "expression": "`DIVERTED_FLIGHTS`"
+                    },
+                    {
+                      "name": "DELAYED_FLIGHTS",
+                      "expression": "`DELAYED_FLIGHTS`"
+                    },
+                    {
+                      "name": "CANCELLED_FLIGHTS",
+                      "expression": "`CANCELLED_FLIGHTS`"
+                    },
+                    {
+                      "name": "ORIGIN_STATE",
+                      "expression": "`ORIGIN_STATE`"
+                    },
+                    {
+                      "name": "ORIGIN_NAME",
+                      "expression": "`ORIGIN_NAME`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "ORIGIN_CITY_TOWN"
+                  },
+                  {
+                    "fieldName": "ORIGIN_AIRPORT"
+                  },
+                  {
+                    "fieldName": "TOTAL_FLIGHTS"
+                  },
+                  {
+                    "fieldName": "DELAY_RATE",
+                    "format": {
+                      "type": "number-plain",
+                      "abbreviation": "none",
+                      "decimalPlaces": {
+                        "type": "exact",
+                        "places": 2
+                      },
+                      "hideGroupSeparator": true
+                    },
+                    "style": {
+                      "type": "basic",
+                      "foregroundColor": {
+                        "themeColorType": "visualizationColors",
+                        "position": 4
+                      },
+                      "rules": [
+                        {
+                          "condition": {
+                            "operand": {
+                              "type": "data-value",
+                              "value": "20"
+                            },
+                            "operator": "<="
+                          },
+                          "foregroundColor": {
+                            "themeColorType": "visualizationColors",
+                            "position": 3
+                          }
+                        },
+                        {
+                          "condition": {
+                            "operand": {
+                              "type": "data-value",
+                              "value": "40"
+                            },
+                            "operator": "<="
+                          },
+                          "foregroundColor": {
+                            "themeColorType": "visualizationColors",
+                            "position": 2
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "fieldName": "DIVERTED_FLIGHTS"
+                  },
+                  {
+                    "fieldName": "DELAYED_FLIGHTS"
+                  },
+                  {
+                    "fieldName": "CANCELLED_FLIGHTS"
+                  },
+                  {
+                    "fieldName": "ORIGIN_STATE"
+                  },
+                  {
+                    "fieldName": "ORIGIN_NAME"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 12,
+            "width": 12,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "locale": "en-US",
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
